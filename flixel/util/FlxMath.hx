@@ -3,6 +3,7 @@ package flixel.util;
 import flash.geom.Rectangle;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flash.system.Capabilities;
 #if !FLX_NO_TOUCH
 import flixel.input.touch.FlxTouch;
 #end
@@ -31,6 +32,8 @@ class FlxMath
 	 * Approximation of Math.sqrt(2).
 	 */
 	public static inline var SQUARE_ROOT_OF_TWO:Float = 1.41421356237;
+	
+	public static inline var CENTIMETERS_PER_INCH:Float = 2.54;
 	
 	/**
 	 * Round a decimal number to have reduced precision (less decimal numbers).
@@ -492,7 +495,7 @@ class FlxMath
 	{
 		return (Math.abs(aValueA - aValueB) <= aDiff);
 	}
-	
+
 	/**
 	 * Returns -1 if the number is smaller than 0 and 1 otherwise
 	 */
@@ -507,5 +510,15 @@ class FlxMath
 	public static inline function sameSign(f1:Float, f2:Float):Bool
 	{
 		return signOf(f1) == signOf(f2);
+	}
+	
+	public static inline function pixelsToCentimeters(Pixels:Float):Float
+	{
+		return (Pixels * CENTIMETERS_PER_INCH) / Capabilities.screenDPI;
+	}
+	
+	public static inline function centimetersToPixels(Centimeters:Float):Float
+	{
+		return (Centimeters / CENTIMETERS_PER_INCH) * Capabilities.screenDPI;
 	}
 }

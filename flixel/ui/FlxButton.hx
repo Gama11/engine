@@ -290,14 +290,14 @@ class FlxTypedButton<T:FlxSprite> extends FlxSprite
 	/**
 	 * Just draws the button graphic and text label to the screen.
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
-		super.draw();
+		super.draw(frameFactor);
 		
 		if (label != null && label.visible)
 		{
 			label.cameras = cameras;
-			label.draw();
+			label.draw(frameFactor);
 		}
 	}
 	

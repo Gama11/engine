@@ -53,16 +53,16 @@ class FlxState extends FlxGroup
 	 */
 	public function create():Void {}
 
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		if (persistentDraw || subState == null)
 		{
-			super.draw();
+			super.draw(frameFactor);
 		}
 		
 		if (subState != null)
 		{
-			subState.draw();
+			subState.draw(frameFactor);
 		}
 	}
 	

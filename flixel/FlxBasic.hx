@@ -107,7 +107,7 @@ class FlxBasic implements IFlxDestroyable
 	 * Override this function to control how the object is drawn.
 	 * Overriding draw() is rarely necessary, but can be very useful.
 	 */
-	public function draw():Void
+	public function draw(frameFactor:Float):Void
 	{
 		#if !FLX_NO_DEBUG
 		visibleCount++;
@@ -192,7 +192,7 @@ interface IFlxBasic
 	public var alive(default, set):Bool;
 	public var exists(default, set):Bool;
 
-	public function draw():Void;
+	public function draw(frameFactor:Float):Void;
 	public function update(elapsed:Float):Void;
 	public function destroy():Void;
 	

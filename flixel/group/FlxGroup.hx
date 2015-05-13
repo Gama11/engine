@@ -144,7 +144,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 	/**
 	 * Automatically goes through and calls render on everything you added.
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		var i:Int = 0;
 		var basic:FlxBasic = null;
@@ -155,7 +155,7 @@ class FlxTypedGroup<T:FlxBasic> extends FlxBasic
 			
 			if (basic != null && basic.exists && basic.visible)
 			{
-				basic.draw();
+				basic.draw(frameFactor);
 			}
 		}
 	}

@@ -129,13 +129,13 @@ class PluginFrontEnd
 	/**
 	 * Used by the game object to call draw() on all the plugins.
 	 */
-	private inline function draw():Void
+	private inline function draw(frameFactor:Float):Void
 	{
 		for (plugin in list)
 		{
 			if (plugin.exists && plugin.visible)
 			{
-				plugin.draw();
+				plugin.draw(frameFactor);
 			}
 		}
 	}

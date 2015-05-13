@@ -45,7 +45,7 @@ class FlxSubState extends FlxState
 		bgColor = BGColor;
 	}
 	
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		//Draw background
 		#if FLX_RENDER_BLIT
@@ -58,7 +58,7 @@ class FlxSubState extends FlxState
 		#end
 		
 		//Now draw all children
-		super.draw();
+		super.draw(frameFactor);
 	}
 	
 	override public function destroy():Void 

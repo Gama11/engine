@@ -205,9 +205,9 @@ class FlxTypedSpriteGroup<T:FlxSprite> extends FlxSprite
 		}
 	}
 	
-	override public function draw():Void 
+	override public function draw(frameFactor:Float):Void 
 	{
-		group.draw();
+		group.draw(frameFactor);
 		#if !FLX_NO_DEBUG
 		_isDrawnDebug = false;
 		#end

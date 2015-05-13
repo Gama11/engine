@@ -403,7 +403,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Draws the tilemap buffers to the cameras.
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		// don't try to render a tilemap that isn't loaded yet
 		if (graphic == null)

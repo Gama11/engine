@@ -749,9 +749,9 @@ class FlxPathManager extends FlxBasic
 	 * Called by FlxG.plugins.draw() after the game state has been drawn.
 	 * Cycles through cameras and calls drawDebug() on each one.
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
-		super.draw();
+		super.draw(frameFactor);
 		if (FlxG.debugger.drawDebug)
 		{
 			for (path in _paths)

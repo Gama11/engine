@@ -57,7 +57,7 @@ class FlxStrip extends FlxSprite
 		super.destroy();
 	}
 	
-	override public function draw():Void 
+	override public function draw(frameFactor:Float):Void 
 	{
 		if (alpha == 0 || graphic == null || vertices == null)
 		{

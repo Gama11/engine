@@ -574,10 +574,10 @@ class FlxObject extends FlxBasic
 	/**
 	 * Rarely called, and in this case just increments the visible objects count and calls drawDebug() if necessary.
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		#if !FLX_NO_DEBUG
-		super.draw();
+		super.draw(frameFactor);
 		if (FlxG.debugger.drawDebug)
 			drawDebug();
 		#end

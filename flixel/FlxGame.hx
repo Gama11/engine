@@ -853,9 +853,9 @@ class FlxGame extends Sprite
 		
 		FlxG.cameras.lock();
 		
-		FlxG.plugins.draw();
-		
-		_state.draw();
+		var frameFactor = _accumulator / _stepMS;
+		FlxG.plugins.draw(frameFactor);
+		_state.draw(frameFactor);
 		
 		#if FLX_RENDER_TILE
 		FlxG.cameras.render();

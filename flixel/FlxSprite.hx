@@ -574,7 +574,7 @@ class FlxSprite extends FlxObject
 	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		if (_frame == null)
 		{
@@ -603,6 +603,7 @@ class FlxSprite extends FlxObject
 			}
 			
 			getScreenPosition(_point, camera).subtractPoint(offset);
+			
 			
 			var cr:Float = colorTransform.redMultiplier;
 			var cg:Float = colorTransform.greenMultiplier;

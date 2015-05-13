@@ -830,12 +830,12 @@ class FlxText extends FlxSprite
 		dirty = true;
 	}
 	
-	override public function draw():Void 
+	override public function draw(frameFactor:Float):Void 
 	{
 		if (_regen)
 			regenGraphics();
 		
-		super.draw();
+		super.draw(frameFactor);
 	}
 	
 	/**

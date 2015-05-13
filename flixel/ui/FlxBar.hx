@@ -817,9 +817,9 @@ class FlxBar extends FlxSprite
 	}
 	
 	#if FLX_RENDER_TILE
-	override public function draw():Void 
+	override public function draw(frameFactor:Float):Void 
 	{
-		super.draw();
+		super.draw(frameFactor);
 		
 		if (alpha == 0)
 		{

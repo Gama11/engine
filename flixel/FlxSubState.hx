@@ -54,7 +54,7 @@ class FlxSubState extends FlxState
 			camera.fill(bgColor);
 		}
 		#else
-		_bgSprite.draw();
+		_bgSprite.draw(frameFactor);
 		#end
 		
 		//Now draw all children

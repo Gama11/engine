@@ -602,7 +602,7 @@ class FlxSprite extends FlxObject
 				continue;
 			}
 			
-			getScreenPosition(_point, camera).subtractPoint(offset);
+			getScreenPosition(_point, camera, frameFactor).subtractPoint(offset);
 			
 			
 			var cr:Float = colorTransform.redMultiplier;

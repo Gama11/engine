@@ -723,7 +723,7 @@ class FlxObject extends FlxBasic
 	 * @param	Point		Takes a FlxPoint object and assigns the post-scrolled X and Y values of this object to it.
 	 * @return	The Point you passed in, or a new Point if you didn't pass one, containing the screen X and Y position of this object.
 	 */
-	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera):FlxPoint
+	public function getScreenPosition(?point:FlxPoint, ?Camera:FlxCamera, ?frameFactor:Float):FlxPoint
 	{
 		if (point == null)
 		{
@@ -735,6 +735,12 @@ class FlxObject extends FlxBasic
 		}
 		
 		point.set(x, y);
+		if (frameFactor != null)
+		{
+			point.x += (FlxG.elapsed * frameFactor) * velocity.x;
+			point.y += (FlxG.elapsed * frameFactor) * velocity.y;
+		}
+		
 		if (pixelPerfectPosition)
 		{
 			point.floor();

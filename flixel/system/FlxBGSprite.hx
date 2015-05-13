@@ -20,7 +20,7 @@ class FlxBGSprite extends FlxSprite
 	/**
 	 * Called by game loop, updates then blits or renders current frame of animation to the screen
 	 */
-	override public function draw():Void
+	override public function draw(frameFactor:Float):Void
 	{
 		var cr:Float = colorTransform.redMultiplier;
 		var cg:Float = colorTransform.greenMultiplier;

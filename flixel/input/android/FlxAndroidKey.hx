@@ -2,13 +2,13 @@ package flixel.input.android;
 
 import flixel.system.macros.FlxMacroUtil;
 
-#if android
 /**
  * Maps enum values and strings to integer keycodes.
  */
 @:enum
 abstract FlxAndroidKey(Int) from Int to Int
 {
+#if android
 	public static var fromStringMap(default, null):Map<String, FlxAndroidKey>
 		= FlxMacroUtil.buildMap("flixel.input.android.FlxAndroidKey");
 		
@@ -32,5 +32,5 @@ abstract FlxAndroidKey(Int) from Int to Int
 	{
 		return toStringMap.get(this);
 	}
-}
 #end
+}

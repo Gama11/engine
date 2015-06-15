@@ -4,6 +4,17 @@ import flixel.util.FlxDestroyUtil.IFlxDestroyable;
 
 class FlxInput<T> implements IFlxInput
 {
+	public static function inputHasState(input:IFlxInput, state:FlxInputState):Bool
+	{
+		return switch (state)
+		{
+			case JUST_RELEASED: input.justReleased;
+			case RELEASED:      input.released;
+			case PRESSED:       input.pressed;
+			case JUST_PRESSED:  input.justPressed;
+		}
+	}
+	
 	public var ID:T;
 	
 	public var justReleased(get, never):Bool;
@@ -51,15 +62,9 @@ class FlxInput<T> implements IFlxInput
 		last = RELEASED;
 	}
 	
-	public function hasState(state:FlxInputState):Bool
+	public inline function hasState(state:FlxInputState):Bool
 	{
-		return switch (state)
-		{
-			case JUST_RELEASED: justReleased;
-			case RELEASED:      released;
-			case PRESSED:       pressed;
-			case JUST_PRESSED:  justPressed;
-		}
+		return inputHasState(this, state);
 	}
 	
 	private inline function get_justReleased():Bool

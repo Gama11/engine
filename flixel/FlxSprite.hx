@@ -607,7 +607,7 @@ class FlxSprite extends FlxObject
 			return;
 		
 		if (dirty) //rarely 
-			calcFrame(useFramePixels);
+			calcFrame(/*TODO useFramePixels*/);
 		
 		for (camera in cameras)
 		{

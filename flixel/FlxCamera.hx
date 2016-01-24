@@ -7,6 +7,7 @@ import flash.display.Sprite;
 import flash.geom.ColorTransform;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flixel.FlxG.FlxRenderMethod;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxFrame;
 import flixel.graphics.tile.FlxDrawBaseItem;
@@ -288,6 +289,8 @@ class FlxCamera extends FlxBasic
 	 * Internal, the filters array to be applied to the camera.
 	 */
 	private var _filters:Array<BitmapFilter>;
+	
+	private var renderMethod:FlxRenderMethod;
 	
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -675,28 +678,12 @@ class FlxCamera extends FlxBasic
 		_scrollRect.scrollRect = new Rectangle();
 		
 		pixelPerfectRender = FlxG.renderBlit;
+		renderMethod = FlxG.renderMethod;
 		
 		if (FlxG.renderBlit)
-		{
-			screen = new FlxSprite();
-			buffer = new BitmapData(width, height, true, 0);
-			screen.pixels = buffer;
-			screen.origin.set();
-			_flashBitmap = new Bitmap(buffer);
-			_scrollRect.addChild(_flashBitmap);
-			_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
-		}
+			createBlittingObjects();
 		else
-		{
-			canvas = new Sprite();
-			_scrollRect.addChild(canvas);
-			_transform = new Matrix();
-			
-			#if !FLX_NO_DEBUG
-			debugLayer = new Sprite();
-			_scrollRect.addChild(debugLayer);
-			#end
-		}
+			createDrawTilesObjects();
 		
 		set_color(FlxColor.WHITE);
 		
@@ -709,6 +696,31 @@ class FlxCamera extends FlxBasic
 		updateInternalSpritePositions();
 		
 		bgColor = FlxG.cameras.bgColor;
+		
+		FlxG.signals.renderMethodChanged.add(onRenderMethodChanged);
+	}
+	
+	private function createBlittingObjects():Void
+	{
+		screen = new FlxSprite();
+		buffer = new BitmapData(width, height, true, 0);
+		screen.pixels = buffer;
+		screen.origin.set();
+		_flashBitmap = new Bitmap(buffer);
+		_scrollRect.addChild(_flashBitmap);
+		_fill = new BitmapData(width, height, true, FlxColor.TRANSPARENT);
+	}
+	
+	private function createDrawTilesObjects():Void
+	{
+		canvas = new Sprite();
+		_scrollRect.addChild(canvas);
+		_transform = new Matrix();
+		
+		#if !FLX_NO_DEBUG
+		debugLayer = new Sprite();
+		_scrollRect.addChild(debugLayer);
+		#end
 	}
 	
 	/**
@@ -719,38 +731,9 @@ class FlxCamera extends FlxBasic
 		FlxDestroyUtil.removeChild(flashSprite, _scrollRect);
 		
 		if (FlxG.renderBlit)
-		{
-			FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
-			screen = FlxDestroyUtil.destroy(screen);
-			buffer = null;
-			_flashBitmap = null;
-			_fill = FlxDestroyUtil.dispose(_fill);
-		}
+			destroyBlittingObjects();
 		else
-		{
-			#if !FLX_NO_DEBUG
-			FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
-			debugLayer = null;
-			#end
-			
-			FlxDestroyUtil.removeChild(_scrollRect, canvas);
-			if (canvas != null)
-			{
-				for (i in 0...canvas.numChildren)
-				{
-					canvas.removeChildAt(0);
-				}
-				canvas = null;
-			}
-			
-			if (_headOfDrawStack != null)
-			{
-				clearDrawStack();
-			}
-			
-			_transform = null;
-			_helperMatrix = null;
-		}
+			destroyDrawTilesObjects();
 		
 		_bounds = null;
 		scroll = FlxDestroyUtil.put(scroll);
@@ -767,7 +750,61 @@ class FlxCamera extends FlxBasic
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
 		
+		FlxG.signals.renderMethodChanged.remove(onRenderMethodChanged);
+		
 		super.destroy();
+	}
+	
+	private function destroyBlittingObjects():Void
+	{
+		_flashBitmap = FlxDestroyUtil.removeChild(_scrollRect, _flashBitmap);
+		screen = FlxDestroyUtil.destroy(screen);
+		buffer = FlxDestroyUtil.dispose(buffer);
+		_fill = FlxDestroyUtil.dispose(_fill);
+	}
+	
+	private function destroyDrawTilesObjects():Void
+	{
+		#if !FLX_NO_DEBUG
+		debugLayer = FlxDestroyUtil.removeChild(_scrollRect, debugLayer);
+		#end
+		
+		FlxDestroyUtil.removeChild(_scrollRect, canvas);
+		if (canvas != null)
+		{
+			for (i in 0...canvas.numChildren)
+			{
+				canvas.removeChildAt(0);
+			}
+			canvas = null;
+		}
+		
+		if (_headOfDrawStack != null)
+		{
+			clearDrawStack();
+		}
+		
+		_transform = null;
+		_helperMatrix = null;
+	}
+	
+	private function onRenderMethodChanged(renderMethod:FlxRenderMethod):Void
+	{
+		if (this.renderMethod == renderMethod)
+			return;
+		
+		switch (renderMethod)
+		{
+			case FlxRenderMethod.BLITTING:
+				destroyDrawTilesObjects();
+				createBlittingObjects();
+			
+			case _:
+				destroyBlittingObjects();
+				createDrawTilesObjects();
+		}
+		
+		this.renderMethod = renderMethod;
 	}
 	
 	/**
@@ -777,9 +814,7 @@ class FlxCamera extends FlxBasic
 	{
 		// follow the target, if there is one
 		if (target != null)
-		{
 			updateFollow();
-		}
 		
 		updateScroll();	
 		updateFlash(elapsed);

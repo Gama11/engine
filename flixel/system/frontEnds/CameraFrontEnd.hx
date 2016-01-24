@@ -57,7 +57,7 @@ class CameraFrontEnd
 	public function remove(Camera:FlxCamera, Destroy:Bool = true):Void
 	{
 		var index:Int = list.indexOf(Camera);
-		if ((Camera != null) && index != -1)
+		if (Camera != null && index != -1)
 		{
 			#if !FLX_RENDER_CRISP
 			FlxG.game.removeChild(Camera.flashSprite);
@@ -121,7 +121,7 @@ class CameraFrontEnd
 	 * @param	OnComplete	A function you want to run when the flash finishes.
 	 * @param	Force		Force the effect to reset.
 	 */
-	public function flash(Color:FlxColor = 0xffffffff, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
+	public function flash(Color:FlxColor = FlxColor.WHITE, Duration:Float = 1, ?OnComplete:Void->Void, Force:Bool = false):Void
 	{
 		for (camera in list)
 		{
@@ -219,7 +219,7 @@ class CameraFrontEnd
 		{
 			for (camera in list)
 			{
-				if ((camera != null) && camera.exists && camera.visible)
+				if (camera != null && camera.exists && camera.visible)
 				{
 					camera.render();
 				}
@@ -234,7 +234,7 @@ class CameraFrontEnd
 	{
 		for (camera in list)
 		{
-			if ((camera == null) || !camera.exists || !camera.visible)
+			if (camera == null || !camera.exists || !camera.visible)
 			{
 				continue;
 			}
@@ -273,9 +273,7 @@ class CameraFrontEnd
 	private function resize():Void
 	{
 		for (camera in list)
-		{
 			camera.onResize();
-		}
 	}
 	
 	private function get_bgColor():FlxColor

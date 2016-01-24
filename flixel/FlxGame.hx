@@ -430,9 +430,7 @@ class FlxGame extends Sprite
 		
 		#if !FLX_NO_FOCUS_LOST_SCREEN
 		if (_focusLostScreen != null)
-		{
 			_focusLostScreen.visible = true;
-		}
 		#end 
 		
 		#if !FLX_NO_DEBUG
@@ -454,9 +452,7 @@ class FlxGame extends Sprite
 		
 		#if !flash
 		if (FlxG.renderTile)
-		{
 			FlxG.bitmap.onContext();
-		}
 		#end
 		
 		resizeGame(width, height);

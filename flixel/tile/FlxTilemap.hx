@@ -117,20 +117,20 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if (!FLX_NO_DEBUG)
 	
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugTileNotSolid:BitmapData;
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugTilePartial:BitmapData;
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugTileSolid:BitmapData;
 	/**
-	* Internal, used for rendering the debug bounding box display.
-	*/
+	 * Internal, used for rendering the debug bounding box display.
+	 */
 	private var _debugRect:Rectangle;
 	
 	#end
@@ -155,13 +155,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		_buffers = new Array<FlxTilemapBuffer>();
 		_flashPoint = new Point();
 		_flashRect = new Rectangle();
-		
-		if (FlxG.renderTile)
-		{
-			_helperPoint = new Point();
-			_matrix = new FlxMatrix();
-		}
-		
+		_helperPoint = new Point();
+		_matrix = new FlxMatrix();
 		colorTransform = new ColorTransform();
 		
 		scale = new FlxCallbackPoint(setScaleXCallback, setScaleYCallback, setScaleXYCallback);
@@ -169,12 +164,12 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		offset = FlxPoint.get();
 		
-		FlxG.signals.gameResized.add(onGameResize);
+		FlxG.signals.gameResized.add(onGameResized);
+		FlxG.signals.renderMethodChanged.add(onRenderMethodChanged);
+		
 		#if (!FLX_NO_DEBUG)
 		if (FlxG.renderBlit)
-		{
 			FlxG.debugger.drawDebugChanged.add(onDrawDebugChanged);
-		}
 		#end
 	}
 	
@@ -216,12 +211,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 		
 		colorTransform = null;
 		
-		FlxG.signals.gameResized.remove(onGameResize);
-		#if (!FLX_NO_DEBUG)
+		FlxG.signals.gameResized.remove(onGameResized);
+		FlxG.signals.renderMethodChanged.remove(onRenderMethodChanged);
+		#if !FLX_NO_DEBUG
 		if (FlxG.renderBlit)
-		{
 			FlxG.debugger.drawDebugChanged.remove(onDrawDebugChanged);
-		}
 		#end
 		
 		super.destroy();
@@ -333,7 +327,8 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	#if !FLX_NO_DEBUG
 	override public function drawDebugOnCamera(Camera:FlxCamera):Void
 	{
-		if (!FlxG.renderTile) return;
+		if (!FlxG.renderTile)
+			return;
 		
 		var buffer:FlxTilemapBuffer = null;
 		var l:Int = FlxG.cameras.list.length;
@@ -428,9 +423,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	{
 		// don't try to render a tilemap that isn't loaded yet
 		if (graphic == null)
-		{
 			return;
-		}
 		
 		var camera:FlxCamera;
 		var buffer:FlxTilemapBuffer;
@@ -871,7 +864,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 			_helperPoint.x = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.x) : _helperPoint.x;
 			_helperPoint.y = isPixelPerfectRender(Camera) ? Math.floor(_helperPoint.y) : _helperPoint.y;
 			
-			scaledWidth  = _scaledTileWidth;
+			scaledWidth = _scaledTileWidth;
 			scaledHeight = _scaledTileHeight;
 			
 			var hasColorOffsets:Bool = (colorTransform != null && colorTransform.hasRGBAOffsets());
@@ -1056,7 +1049,7 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 	/**
 	 * Signal listener for gameResize 
 	 */
-	private function onGameResize(_,_):Void
+	private function onGameResized(_,_):Void
 	{
 		if (graphic == null)
 			return;
@@ -1079,6 +1072,11 @@ class FlxTilemap extends FlxBaseTilemap<FlxTile>
 				_buffers[i] = createBuffer(camera);
 			}
 		}
+	}
+	
+	private function onRenderMethodChanged(_):Void
+	{
+		_buffers = [];
 	}
 	
 	#if (!FLX_NO_DEBUG)

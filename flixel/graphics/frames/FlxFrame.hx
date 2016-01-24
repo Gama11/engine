@@ -59,20 +59,20 @@ class FlxFrame implements IFlxDestroyable
 	/**
 	 * Original (uncropped) image size.
 	 */
-	public var sourceSize(default, null):FlxPoint;
+	public var sourceSize(default, null):FlxPoint = FlxPoint.get();
 	/**
 	 * Frame offset from top left corner of original image.
 	 */
-	public var offset(default, null):FlxPoint;
+	public var offset(default, null):FlxPoint = FlxPoint.get();
 	
 	/**
 	 * The type of this frame.
 	 */
-	public var type:FlxFrameType;
+	public var type:FlxFrameType = FlxFrameType.REGULAR;
 	
-	private var tileMatrix:Vector<Float>;
+	private var tileMatrix:Vector<Float> = new Vector<Float>(6);
 	
-	private var blitMatrix:Vector<Float>;
+	private var blitMatrix:Vector<Float> = new Vector<Float>(6);
 	
 	@:allow(flixel)
 	private function new(parent:FlxGraphic, angle:FlxFrameAngle = FlxFrameAngle.ANGLE_0, flipX:Bool = false, flipY:Bool = false)
@@ -81,17 +81,6 @@ class FlxFrame implements IFlxDestroyable
 		this.angle = angle;
 		this.flipX = flipX;
 		this.flipY = flipY;
-		
-		type = FlxFrameType.REGULAR;
-		
-		sourceSize = FlxPoint.get();
-		offset = FlxPoint.get();
-		
-		blitMatrix = new Vector<Float>(6);
-		if (FlxG.renderTile)
-		{
-			tileMatrix = new Vector<Float>(6);
-		}
 	}
 	
 	@:allow(flixel.graphics.frames)

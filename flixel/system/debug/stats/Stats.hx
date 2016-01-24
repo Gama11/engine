@@ -71,16 +71,16 @@ class Stats extends Window
 	private var _lastTime:Int = 0;
 	private var _updateTimer:Int = 0;
 	
-	private var _update:Array<Int>;
+	private var _update:Array<Int> = [];
 	private var _updateMarker:Int = 0;
 	
-	private var _draw:Array<Int>;
+	private var _draw:Array<Int> = [];
 	private var _drawMarker:Int = 0;
 	
-	private var _visibleObject:Array<Int>;
+	private var _visibleObject:Array<Int> = [];
 	private var _visibleObjectMarker:Int = 0;
 	
-	private var _activeObject:Array<Int>;
+	private var _activeObject:Array<Int> = [];
 	private var _activeObjectMarker:Int = 0;
 	
 	private var _paused:Bool = true;
@@ -88,7 +88,7 @@ class Stats extends Window
 	private var _toggleSizeButton:FlxSystemButton;
 	
 	private var drawCallsCount:Int = 0;
-	private var _drawCalls:Array<Int>;
+	private var _drawCalls:Array<Int> = [];
 	private var _drawCallsMarker:Int = 0;
 	
 	/**
@@ -109,17 +109,7 @@ class Stats extends Window
 		resize(INITIAL_WIDTH, MIN_HEIGHT);
 		
 		start();
-		
-		_update = [];
-		_draw = [];
-		_activeObject = [];
-		_visibleObject = [];
-		
-		if (FlxG.renderTile)
-		{
-			_drawCalls = [];
-		}
-		
+
 		var gutter:Int = 5;
 		var graphX:Int = gutter;
 		var graphY:Int = Std.int(_header.height) + gutter;

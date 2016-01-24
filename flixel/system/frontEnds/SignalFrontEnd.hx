@@ -1,5 +1,6 @@
 package flixel.system.frontEnds;
 
+import flixel.FlxG.FlxRenderMethod;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSignal;
 
@@ -27,6 +28,7 @@ class SignalFrontEnd
 	public var postDraw(default, null):FlxSignal = new FlxSignal();
 	public var focusGained(default, null):FlxSignal = new FlxSignal();
 	public var focusLost(default, null):FlxSignal = new FlxSignal();
+	public var renderMethodChanged(default, null):FlxTypedSignal<FlxRenderMethod->Void> = new FlxTypedSignal<FlxRenderMethod->Void>();
 	
 	@:allow(flixel.FlxG)
 	private function new() {}

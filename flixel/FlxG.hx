@@ -113,7 +113,7 @@ class FlxG
 	 */
 	public static var drawFramerate(default, set):Int;
 	
-	public static var renderMethod(default, null):FlxRenderMethod;
+	public static var renderMethod(default, set):FlxRenderMethod;
 	
 	public static var renderBlit(default, null):Bool;
 	public static var renderTile(default, null):Bool;
@@ -542,8 +542,6 @@ class FlxG
 	
 	private static function initRenderMethod():Void
 	{
-		renderMethod = BLITTING;
-		
 		#if (!lime_legacy && !flash)
 			if (Lib.application.config.windows[0].hardware == false)
 			{
@@ -551,7 +549,7 @@ class FlxG
 			}
 			else
 			{
-				renderMethod = switch(stage.window.renderer.type)
+				renderMethod = switch (stage.window.renderer.type)
 				{
 					case OPENGL, CONSOLE:      DRAW_TILES;
 					case CANVAS, FLASH, CAIRO: BLITTING;
@@ -565,11 +563,6 @@ class FlxG
 				renderMethod = DRAW_TILES;
 			#end
 		#end
-		
-		renderBlit = renderMethod == BLITTING;
-		renderTile = renderMethod == DRAW_TILES;
-		
-		FlxObject.defaultPixelPerfectPosition = renderBlit;
 	}
 	
 	/**
@@ -589,7 +582,7 @@ class FlxG
 		timeScale = 1.0;
 		elapsed = 0;
 		maxElapsed = 0.1;
-		worldBounds.set( -10, -10, width + 20, height + 20);
+		worldBounds.set(-10, -10, width + 20, height + 20);
 		worldDivisions = 6;	
 	}
 	
@@ -662,6 +655,27 @@ class FlxG
 		}
 		
 		return Framerate;
+	}
+	
+	private static function set_renderMethod(renderMethod:FlxRenderMethod):FlxRenderMethod
+	{
+		if (FlxG.renderMethod == renderMethod)
+			return renderMethod;
+		
+		renderBlit = renderMethod == BLITTING;
+		renderTile = !renderBlit;
+		FlxObject.defaultPixelPerfectPosition = renderBlit;
+		
+		var dispatchSignal = FlxG.renderMethod != null;
+		FlxG.renderMethod = renderMethod;
+		if (dispatchSignal)
+		{
+			FlxG.signals.renderMethodChanged.dispatch(renderMethod);
+			scaleMode.onMeasure(stage.stageWidth, stage.stageHeight);
+		}
+		
+		
+		return renderMethod;
 	}
 	
 	private static function get_fullscreen():Bool

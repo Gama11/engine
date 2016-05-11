@@ -330,6 +330,8 @@ class FlxCamera extends FlxBasic
 	 * Internal, defines on what axes to shake. Default value is XY / both.
 	 */
 	private var _fxShakeAxes:FlxAxes = XY;
+	private var _fxShakeScroll:Bool = false;
+	private var _fxPrevShakeOffset:FlxPoint = FlxPoint.get();
 	/**
 	 * Internal, used for repetitive calculations and added to help avoid costly allocations.
 	 */
@@ -839,6 +841,7 @@ class FlxCamera extends FlxBasic
 		_fxFadeComplete = null;
 		_fxShakeComplete = null;
 		_fxShakeOffset = null;
+		_fxPrevShakeOffset = null;
 		
 		super.destroy();
 	}
@@ -1012,27 +1015,28 @@ class FlxCamera extends FlxBasic
 	
 	private function updateShake(elapsed:Float):Void
 	{
-		if (_fxShakeDuration > 0)
+		if (_fxShakeDuration <= 0)
+			return;
+		
+		_fxShakeDuration -= elapsed;
+		if (_fxShakeDuration <= 0)
 		{
-			_fxShakeDuration -= elapsed;
-			if (_fxShakeDuration <= 0)
+			_fxPrevShakeOffset.copyFrom(_fxShakeOffset);
+			_fxShakeOffset.set();
+			if (_fxShakeComplete != null)
 			{
-				_fxShakeOffset.set();
-				if (_fxShakeComplete != null)
-				{
-					_fxShakeComplete();
-				}
+				_fxShakeComplete();
 			}
-			else
+		}
+		else
+		{
+			if (_fxShakeAxes != FlxAxes.Y)
 			{
-				if (_fxShakeAxes != FlxAxes.Y)
-				{
-					_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
-				}
-				if (_fxShakeAxes != FlxAxes.X)
-				{
-					_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
-				}
+				_fxShakeOffset.x = FlxG.random.float( -_fxShakeIntensity * width, _fxShakeIntensity * width) * zoom;
+			}
+			if (_fxShakeAxes != FlxAxes.X)
+			{
+				_fxShakeOffset.y = FlxG.random.float( -_fxShakeIntensity * height, _fxShakeIntensity * height) * zoom;
 			}
 		}
 	}
@@ -1259,7 +1263,8 @@ class FlxCamera extends FlxBasic
 	 * @param	Force		Force the effect to reset (default = true, unlike flash() and fade()!).
 	 * @param	Axes		On what axes to shake. Default value is XY / both.
 	 */
-	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true, ?Axes:FlxAxes):Void
+	public function shake(Intensity:Float = 0.05, Duration:Float = 0.5, ?OnComplete:Void->Void, Force:Bool = true,
+		?Axes:FlxAxes, ShakeScroll:Bool = true):Void
 	{
 		if (Axes == null)
 			Axes = XY;
@@ -1273,6 +1278,8 @@ class FlxCamera extends FlxBasic
 		_fxShakeComplete = OnComplete;
 		_fxShakeAxes = Axes;
 		_fxShakeOffset.set();
+		_fxShakeScroll = ShakeScroll;
+		_fxPrevShakeOffset.set();
 	}
 	
 	/**
@@ -1401,8 +1408,16 @@ class FlxCamera extends FlxBasic
 		
 		if ((_fxShakeOffset.x != 0) || (_fxShakeOffset.y != 0))
 		{
-			flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
-			flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
+			if (_fxShakeScroll)
+			{
+				scroll.subtractPoint(_fxPrevShakeOffset);
+				scroll.addPoint(_fxShakeOffset);
+			}
+			else
+			{
+				flashSprite.x += _fxShakeOffset.x * FlxG.scaleMode.scale.x;
+				flashSprite.y += _fxShakeOffset.y * FlxG.scaleMode.scale.y;
+			}
 		}
 	}
 	

@@ -65,4 +65,24 @@ class FlxMacroUtil
 		else
 			return positionExpr;
 	}
+	
+	/**
+	 * Returns the name of the passed in variable.
+	 */
+	public static macro function nameof(field:Expr):ExprOf<String>
+	{
+		trace(field);
+		switch (field.expr)
+		{
+			case EConst(const):
+				switch (const)
+				{
+					case CIdent(name):
+						return Context.makeExpr(name, Context.currentPos());
+					case _:
+				}
+			case _:
+		}
+		return null;
+	}
 }

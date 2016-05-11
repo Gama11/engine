@@ -5,13 +5,16 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
 import flixel.math.FlxVelocity;
+import flixel.system.macros.FlxMacroUtil;
 import flixel.tile.FlxBaseTilemap;
 import flixel.util.FlxAxes;
 import flixel.util.FlxColor;
 import flixel.util.FlxDestroyUtil;
 import flixel.util.FlxPath;
+import flixel.util.FlxMacroStringUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.util.FlxStringUtil;
+using flixel.system.macros.FlxMacroUtil;
 
 /**
  * This is the base class for most of the display objects (FlxSprite, FlxText, etc).
@@ -1083,13 +1086,15 @@ class FlxObject extends FlxBasic
 	 */
 	override public function toString():String
 	{
+		FlxMacroStringUtil.getDebugString([x, y, width, height, visible, velocity]);
+		
 		return FlxStringUtil.getDebugString([
-			LabelValuePair.weak("x", x), 
-			LabelValuePair.weak("y", y), 
-			LabelValuePair.weak("w", width), 
-			LabelValuePair.weak("h", height), 
-			LabelValuePair.weak("visible", visible), 
-			LabelValuePair.weak("velocity", velocity)]);
+			LabelValuePair.weak(FlxMacroUtil.nameof(x), x)]); 
+			/*LabelValuePair.weak(y.nameof(), y), 
+			LabelValuePair.weak(width.nameof(), width), 
+			LabelValuePair.weak(height.nameof(), height), 
+			LabelValuePair.weak(visible.nameof(), visible), 
+			LabelValuePair.weak(velocity.nameof(), velocity)]);*/
 	}
 	
 	private function set_x(NewX:Float):Float

@@ -26,4 +26,6 @@ install:
   - haxelib dev flixel .
 
 script:
+  - while sleep 540; do echo "=====[ $SECONDS seconds still running ]====="; done &
   - haxe --cwd tests --run RunTravis $TARGET $OPENFL
+  - kill %1

@@ -142,8 +142,8 @@ class RunTravis
 			return haxelibRun(["munit", "gen"])
 		);
 
-		if (target == Target.FLASH || target == Target.HTML5)
-		{	
+		if (true)
+		{
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
 			Sys.println("Building unit tests...\n");

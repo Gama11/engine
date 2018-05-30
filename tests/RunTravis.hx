@@ -135,9 +135,6 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
-		if (target == Target.FLASH)
-			return ExitCode.SUCCESS;
-
 		runInDir("unit", function()
 			return haxelibRun(["munit", "gen"])
 		);
@@ -152,7 +149,7 @@ class RunTravis
 		else
 		{
 			Sys.println("Running unit tests...\n");
-			return runOpenFL("test", "unit", target);
+			return runOpenFL("test", "unit", target, "FLX_NO_SOUND_SYSTEM");
 		}
 	}
 	

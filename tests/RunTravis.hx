@@ -90,7 +90,7 @@ class RunTravis
 		return runAll(switch (openfl)
 		{
 			case NEW: [
-					haxelibInstall.bind("openfl"),
+					haxelibGit.bind("openfl", "openfl"),
 					haxelibInstall.bind("lime")
 				];
 			case OLD: [

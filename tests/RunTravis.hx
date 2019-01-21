@@ -39,7 +39,7 @@ class RunTravis
 		dryRun = Sys.args().indexOf("-dry-run") != -1;
 
 		putEnv("HXCPP_SILENT", "1");
-		putEnv("HXCPP_COMPILE_CACHE", "~/hxcpp_cache");
+		putEnv("HXCPP_COMPILE_CACHE", Sys.getEnv("HOME") + "/hxcpp_cache");
 		putEnv("HXCPP_CACHE_MB", "5000");
 	
 		var installationResult = runUntilFailure([
@@ -81,7 +81,8 @@ class RunTravis
 			haxelibGit.bind("HaxeFlixel", "flixel-templates"),
 			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
 			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
-			haxelibGit.bind("HaxeFlixel", "flixel-ui")
+			haxelibGit.bind("HaxeFlixel", "flixel-ui"),
+			haxelibGit.bind("larsiusprime", "steamwrap")
 		]);
 	}
 
@@ -135,24 +136,22 @@ class RunTravis
 	
 	static function runUnitTests(target:Target):ExitCode
 	{
-		if (target == Target.FLASH)
-			return ExitCode.SUCCESS;
-
 		runInDir("unit", function()
 			return haxelibRun(["munit", "gen"])
 		);
 
-		if (target == Target.FLASH || target == Target.HTML5)
+		if (target == Target.FLASH || target == Target.HTML5 || target == Target.NEKO)
 		{	
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
+			// also, neko fails randomly for some reason... (#2148)
 			Sys.println("Building unit tests...\n");
 			return build("unit", target);
 		}
 		else
 		{
 			Sys.println("Running unit tests...\n");
-			return runOpenFL("test", "unit", target);
+			return runOpenFL("test", "unit", target, "travis");
 		}
 	}
 	

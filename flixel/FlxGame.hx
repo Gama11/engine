@@ -88,7 +88,7 @@ class FlxGame extends Sprite
 	public var filtersEnabled:Bool = true;
 	
 	/**
-	 * A flag for triggering the `gameStarted` "event".
+	 * A flag for triggering the `preGameStart` and `postGameStart` "events".
 	 */
 	@:allow(flixel.system.FlxSplash)
 	var _gameJustStarted:Bool = false;
@@ -606,7 +606,7 @@ class FlxGame extends Sprite
 		FlxG.sound.destroy();
 		#end
 		
-		FlxG.signals.stateSwitched.dispatch();
+		FlxG.signals.preStateSwitch.dispatch();
 		
 		#if FLX_RECORD
 		FlxRandom.updateStateSeed();
@@ -622,6 +622,9 @@ class FlxGame extends Sprite
 		// Finally assign and create the new state
 		_state = _requestedState;
 		
+		if (_gameJustStarted)
+			FlxG.signals.preGameStart.dispatch();
+		
 		FlxG.signals.preStateCreate.dispatch(_state);
 		
 		_state.create();
@@ -632,11 +635,13 @@ class FlxGame extends Sprite
 		#if FLX_DEBUG
 		debugger.console.registerObject("state", _state);
 		#end
+		
+		FlxG.signals.postStateSwitch.dispatch();
 	}
 	
 	function gameStart():Void
 	{
-		FlxG.signals.gameStarted.dispatch();
+		FlxG.signals.postGameStart.dispatch();
 		_gameJustStarted = false;
 	}
 	

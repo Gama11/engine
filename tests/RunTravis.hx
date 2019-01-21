@@ -81,7 +81,8 @@ class RunTravis
 			haxelibGit.bind("HaxeFlixel", "flixel-templates"),
 			haxelibGit.bind("HaxeFlixel", "flixel-demos"),
 			haxelibGit.bind("HaxeFlixel", "flixel-addons"),
-			haxelibGit.bind("HaxeFlixel", "flixel-ui")
+			haxelibGit.bind("HaxeFlixel", "flixel-ui"),
+			haxelibGit.bind("larsiusprime", "steamwrap")
 		]);
 	}
 
@@ -143,13 +144,14 @@ class RunTravis
 		{
 			// can't run / display results without a browser,
 			// this at least checks if the tests compile
+			// also, neko fails randomly for some reason... (#2148)
 			Sys.println("Building unit tests...\n");
 			return build("unit", target);
 		}
 		else
 		{
 			Sys.println("Running unit tests...\n");
-			return runOpenFL("test", "unit", target);
+			return runOpenFL("test", "unit", target, "travis");
 		}
 	}
 	

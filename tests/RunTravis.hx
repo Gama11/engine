@@ -67,11 +67,14 @@ class RunTravis
 
 	static function installHaxelibs():ExitCode
 	{
+		runCommand("wget", ["https://github.com/deltaluca/nape/files/2364240/2.0.21.zip"]);
+		runCommand("unzip", ["2.0.21.zip"]);
+		runCommand("haxelib", ["dev", "nape", "2,0,21"]);
+
 		return runUntilFailure([
 			haxelibInstall.bind("munit"),
 			haxelibInstall.bind("hamcrest"),
 			haxelibInstall.bind("systools"),
-			haxelibInstall.bind("nape"),
 			haxelibInstall.bind("task"),
 			haxelibInstall.bind("poly2trihx"),
 			haxelibInstall.bind("spinehaxe"),
